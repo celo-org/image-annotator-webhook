@@ -1,8 +1,7 @@
-# TODO: Add unit tests
-# .PHONY: test
-# test:
-# 	@echo "\n🛠️  Running unit tests..."
-# 	go test ./...
+.PHONY: test
+test:
+	@echo "\n🛠️  Running unit tests..."
+	go test ./...
 
 .PHONY: build
 build:
@@ -25,4 +24,3 @@ docker-build:
 # delete-cluster:
 # 	@echo "\n♻️  Deleting Kubernetes cluster..."
 # 	kind delete cluster
-

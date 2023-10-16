@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: image-annotator-webhook
+  name: image-annotator-webhook
+  namespace: image-annotator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: image-annotator-webhook
+  template:
+    metadata:
+      labels:
+        app: image-annotator-webhook
+    spec:
+      containers:
+        - image: image-annotator-webhook:latest
+          imagePullPolicy: Never
+          name: image-annotator-webhook
+          volumeMounts:
+            - name: tls
+              mountPath: "/etc/image-annotator-webhook/tls"
+              readOnly: true
+      volumes:
+        - name: tls
+          secret:
+            secretName: image-annotator-webhook-tls

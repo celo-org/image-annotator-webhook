@@ -1,0 +1,137 @@
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: image-annotator
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    caBundle: |
+      LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURQekNDQWllZ0F3SUJBZ0lVQnljTllkVDVXcjlF
+      eEVVUzg0d0JPdS82NWlBd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0x6RUxNQWtHQTFVRUJoTUNSVlV4SURB
+      ZUJnTlZCQU1NRjJsdFlXZGxMV0Z1Ym05MFlYUnZjaTEzWldKbwpiMjlyTUI0WERUSXpNVEF4TmpBNU1q
+      Z3hPVm9YRFRNek1UQXhNekE1TWpneE9Wb3dMekVMTUFrR0ExVUVCaE1DClJWVXhJREFlQmdOVkJBTU1G
+      Mmx0WVdkbExXRnVibTkwWVhSdmNpMTNaV0pvYjI5ck1JSUJJakFOQmdrcWhraUcKOXcwQkFRRUZBQU9D
+      QVE4QU1JSUJDZ0tDQVFFQW10aTBLTEJReHpkLzA5N0VFU2l5cXJpemwyaFB3VWZlejk0NwpkM0c2WFZN
+      QXl1UERUMjQyZ0VpVkpZSGRkM01kdDh2ZHpUaUsxcjN6N1ZXTXVDQzh5K2ZCZHZBd3RBMVdSQjkzCmRt
+      cmVyQ0ZGdEJuVVNrMnB4VkhhNlM4VjdTNFJBZ1E4dWVKZTEyMlQzZlhxTmJWWVQzaTRYTDAvR0s0SXd0
+      dlYKakhCcU5ELysvKzdXbGFDazQ3QnpsbE1Jb3M2T3o2cHl2RlY0MHo5emswdUlNdUZhRzl5VnAyR21j
+      TjFkSHdTVApuUmJ4MWhlcDJwdGI4WWpNekJ5OVl1WnRzUGxtbEpoUUlVeC92bG5uZXB6WVh4TktaN0xt
+      eG8yeVhZZDluK09YCmprYzVMTGpqd3ZKTjYzZUpjdWhjbXVRTENjL3p5dTB5azRiUlRwd01vZkwvYkpl
+      a3FRSURBUUFCbzFNd1VUQWQKQmdOVkhRNEVGZ1FVRExXVXhoWEZtUjVGZmM4LzQvSmhobjNOZjhzd0h3
+      WURWUjBqQkJnd0ZvQVVETFdVeGhYRgptUjVGZmM4LzQvSmhobjNOZjhzd0R3WURWUjBUQVFIL0JBVXdB
+      d0VCL3pBTkJna3Foa2lHOXcwQkFRc0ZBQU9DCkFRRUFRQ2xBcnZtNG5lUDhaNjMxSDlyRjUxbDdXdkR5
+      NjY4NXphcTR6Z0RjeWgxT3AwTHBBMEVNSG9MU2ZhVFgKTHZVZFlIem1ETktSaDRsYlZGYzNuQ3NRQkwx
+      TDMvT1ovUWk1QlFpWmZabmpwSWludHlUT1p2YTgvQlI5WHptYwprdlBCWnRFTjhxZUZOUktNclNnYlFK
+      Z3M3dWliak1taDN4dTlPQW1NY2tmYTBQUXJvNlJUbFRLaDlqRnZ0MTlJCjhSRE43Q2J3L1l3TWJvVDI3
+      S2FzRjBMdzNhMVk1emRqQkhpajRzWHdiZ1pEeEpxTmJRV2N2VXVOWmhDdGNJZnkKdnNrVnUzb0lRK0tz
+      Ums5bWFIT1RMQmZ2RjJUdTVFc0lCQzhjOFhhZ3g2R2o1clNJR0hXaFN5eFhGRUswbmcyUwpRUDVuQktR
+      WHhCNVVHekNONm0rYzBCVXBqdz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+    service:
+      name: image-annotator
+      namespace: image-annotator
+      path: /mutate
+      port: 8443
+  failurePolicy: Ignore
+  matchPolicy: Equivalent
+  name: image-annotator
+  namespaceSelector:
+    matchExpressions:
+    - key: webhooks.knative.dev/exclude
+      operator: DoesNotExist
+    - key: image-annotator/exclude
+      operator: DoesNotExist
+  objectSelector:
+  reinvocationPolicy: IfNeeded
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - pods
+    - pods/status
+    scope: '*'
+  - apiGroups:
+    - apps
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - daemonsets
+    - daemonsets/status
+    scope: '*'
+  - apiGroups:
+    - apps
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - deployments
+    - deployments/status
+    scope: '*'
+  - apiGroups:
+    - apps
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - replicasets
+    - replicasets/status
+    scope: '*'
+  - apiGroups:
+    - apps
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - statefulsets
+    - statefulsets/status
+    scope: '*'
+  - apiGroups:
+    - batch
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - cronjobs
+    - cronjobs/status
+    scope: '*'
+  - apiGroups:
+    - batch
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - jobs
+    - jobs/status
+    scope: '*'
+  - apiGroups:
+    - batch
+    apiVersions:
+    - v1beta1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - cronjobs
+    - cronjobs/status
+    scope: '*'
+  sideEffects: None
+  timeoutSeconds: 10

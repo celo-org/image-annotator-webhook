@@ -16,8 +16,10 @@ import (
 
 func main() {
 	http.HandleFunc("/mutate", mutateHandler)
+	cert := "/etc/image-annotator-webhook/tls/tls.crt"
+	key := "/etc/image-annotator-webhook/tls/tls.key"
 	port := 8443
-	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+	http.ListenAndServeTLS(fmt.Sprintf(":%d", port), cert, key, nil)
 }
 
 func mutateHandler(w http.ResponseWriter, r *http.Request) {
@@ -119,4 +121,3 @@ func patchPodSpec(podSpec *v1.PodSpec) ([]byte, error) {
 func sanitize(name string) string {
 	return strings.Replace(name, "-", "_", -1)
 }
-

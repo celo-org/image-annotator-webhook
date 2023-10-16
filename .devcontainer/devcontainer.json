@@ -6,17 +6,36 @@
 	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
 
 	"features": {
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"moby": true,
+			"azureDnsAutoDetection": true,
+			"installDockerBuildx": true,
+			"version": "latest",
+			"dockerDashComposeVersion": "none"
+		},
 		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
 			"version": "latest",
 			"helm": "latest",
 			"minikube": "latest"
 		},
-		"ghcr.io/devcontainers-contrib/features/kind:1": {},
-		"ghcr.io/devcontainers-contrib/features/zsh-plugins:0": {},
-		"ghcr.io/guiyomh/features/golangci-lint:0": {},
+		"ghcr.io/devcontainers-contrib/features/kind:1": {
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers-contrib/features/zsh-plugins:0": {
+			"plugins": "ssh-agent npm",
+			"omzPlugins": "https://github.com/zsh-users/zsh-autosuggestions",
+			"username": "root"
+		},
+		"ghcr.io/guiyomh/features/golangci-lint:0": {
+			"version": "latest"
+		},
 		"ghcr.io/rio/features/k3d:1": {},
-		"ghcr.io/brokeyourbike/devcontainer-features/mockery-go:0": {}
+		"ghcr.io/brokeyourbike/devcontainer-features/mockery-go:0": {
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/go:1": {
+			"version": "latest"
+		}
 	}
 	
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

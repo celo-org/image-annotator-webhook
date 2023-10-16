@@ -1,3 +1,5 @@
+cluster_name = cluster-dev
+
 .PHONY: test
 test:
 	@echo "\n🛠️  Running unit tests..."
@@ -14,13 +16,17 @@ docker-build:
 	@echo "\n📦 Building simple-kubernetes-webhook Docker image..."
 	docker build -t image-annotator-webhook:latest .
 
-# # From this point `kind` is required
-# .PHONY: cluster
-# cluster:
-# 	@echo "\n🔧 Creating Kubernetes cluster..."
-# 	kind create cluster --config dev/manifests/kind/kind.cluster.yaml
+.PHONY: cluster
+cluster:
+	@echo "\n🔧 Creating Kubernetes cluster..."
+	kind create cluster --name $(cluster_name)
 
-# .PHONY: delete-cluster
-# delete-cluster:
-# 	@echo "\n♻️  Deleting Kubernetes cluster..."
-# 	kind delete cluster
+.PHONY: delete-cluster
+delete-cluster:
+	@echo "\n♻️  Deleting Kubernetes cluster..."
+	kind delete cluster --name $(cluster_name)
+
+.PHONY: push
+push: docker-build
+	@echo "\n📦 Pushing admission-webhook image into Kind's Docker daemon..."
+	kind load docker-image image-annotator-webhook:latest --name $(cluster_name)

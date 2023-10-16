@@ -14,7 +14,8 @@
 		"ghcr.io/rio/features/k3d:1": {},
 		"ghcr.io/brokeyourbike/devcontainer-features/mockery-go:0": {},
 		"ghcr.io/devcontainers/features/go:1": {},
-		"ghcr.io/guiyomh/features/vim:0": {}
+		"ghcr.io/guiyomh/features/vim:0": {},
+		"ghcr.io/devcontainers-contrib/features/kubectx-kubens:1": {}
 	}
 	
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

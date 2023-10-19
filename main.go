@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 
+	"github.com/sirupsen/logrus"
 	admissionv1 "k8s.io/api/admission/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	batchv1 "k8s.io/api/batch/v1"
@@ -19,12 +21,26 @@ func main() {
 	cert := "/etc/image-annotator-webhook/tls/tls.crt"
 	key := "/etc/image-annotator-webhook/tls/tls.key"
 	port := 8443
+
+	lvl, ok := os.LookupEnv("LOG_LEVEL")
+	if !ok {
+		lvl = "debug"
+	}
+	level, err := logrus.ParseLevel(lvl)
+	if err != nil {
+		level = logrus.DebugLevel
+	}
+	logrus.SetLevel(level)
+
+	logrus.Print("Listening on port 8443...")
 	http.ListenAndServeTLS(fmt.Sprintf(":%d", port), cert, key, nil)
 }
 
 func mutateHandler(w http.ResponseWriter, r *http.Request) {
 	// Resources with podSpec: replicasets, deployments,
 	// pods, cronjobs, jobs, statefulsets, daemonsets
+	logger := logrus.WithField("uri", r.RequestURI)
+	logger.Debug("received mutating request")
 
 	var admissionResponse *admissionv1.AdmissionResponse
 
@@ -65,6 +81,7 @@ func mutateHandler(w http.ResponseWriter, r *http.Request) {
 		// If PodSpec is available, patch it
 		if podSpec != nil {
 			patch, err := patchPodSpec(podSpec)
+			logrus.Debug("patch: ", string(patch))
 			if err != nil {
 				admissionResponse = toAdmissionResponse(err)
 			} else {
@@ -86,6 +103,9 @@ func mutateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Return the AdmissionReview to the API server
+	// Log the object admissionResponse as JSON
+	jsonString, _ := json.Marshal(&admissionResponse)
+	logrus.Debug("admissionResponse: ", string(jsonString))
 	admissionReview.Response = admissionResponse
 	admissionReview.Response.UID = admissionReview.Request.UID
 	if err := json.NewEncoder(w).Encode(admissionReview); err != nil {
@@ -107,11 +127,10 @@ func patchPodSpec(podSpec *v1.PodSpec) ([]byte, error) {
 	// Extract and append container images
 	containers := append(podSpec.Containers, podSpec.InitContainers...)
 	for _, container := range containers {
-		imageAnnotation := map[string]string{"image": container.Image}
 		patch = append(patch, map[string]interface{}{
 			"op":    "add",
-			"path":  fmt.Sprintf("/metadata/annotations/image-%s", sanitize(container.Name)),
-			"value": imageAnnotation,
+			"path":  "/metadata/annotations/image-" + sanitize(container.Name),
+			"value": container.Image,
 		})
 	}
 

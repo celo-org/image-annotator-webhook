@@ -30,3 +30,24 @@ delete-cluster:
 push: docker-build
 	@echo "\n📦 Pushing admission-webhook image into Kind's Docker daemon..."
 	kind load docker-image image-annotator-webhook:latest --name $(cluster_name)
+
+.PHONY: deploy-webhook
+deploy-webhook:
+	@echo "\n🪝 Deploying webhook manifests to Kind cluster..."
+	kubectl apply -f k8s-manifests/webhook/
+
+.PHONY: push-deploy
+push-deploy: push
+	@echo "\n Redeploying webhook pod"
+	kubectl delete pod -n image-annotator -l app.kubernetes.io/name=image-annotator-webhook
+
+.PHONY: deploy-testing
+deploy-testing: push-deploy
+	@echo "\n📦 Deploying webhook manifests to Kind cluster..."
+	kubectl delete ns testing || true
+	kubectl apply -f k8s-manifests/testing/
+
+.PHONY: logs-webhook
+logs-webhook:
+	kubectl logs -n image-annotator -l app.kubernetes.io/name=image-annotator-webhook
+	kubectl events -n testing

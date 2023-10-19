@@ -2,47 +2,54 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
-  name: image-annotator
+  name: image-annotator.clabs.co
 webhooks:
-- admissionReviewVersions:
+- name: image-annotator.clabs.co
+  admissionReviewVersions:
   - v1
   clientConfig:
     caBundle: |
-      LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURQekNDQWllZ0F3SUJBZ0lVQnljTllkVDVXcjlF
-      eEVVUzg0d0JPdS82NWlBd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0x6RUxNQWtHQTFVRUJoTUNSVlV4SURB
-      ZUJnTlZCQU1NRjJsdFlXZGxMV0Z1Ym05MFlYUnZjaTEzWldKbwpiMjlyTUI0WERUSXpNVEF4TmpBNU1q
-      Z3hPVm9YRFRNek1UQXhNekE1TWpneE9Wb3dMekVMTUFrR0ExVUVCaE1DClJWVXhJREFlQmdOVkJBTU1G
-      Mmx0WVdkbExXRnVibTkwWVhSdmNpMTNaV0pvYjI5ck1JSUJJakFOQmdrcWhraUcKOXcwQkFRRUZBQU9D
-      QVE4QU1JSUJDZ0tDQVFFQW10aTBLTEJReHpkLzA5N0VFU2l5cXJpemwyaFB3VWZlejk0NwpkM0c2WFZN
-      QXl1UERUMjQyZ0VpVkpZSGRkM01kdDh2ZHpUaUsxcjN6N1ZXTXVDQzh5K2ZCZHZBd3RBMVdSQjkzCmRt
-      cmVyQ0ZGdEJuVVNrMnB4VkhhNlM4VjdTNFJBZ1E4dWVKZTEyMlQzZlhxTmJWWVQzaTRYTDAvR0s0SXd0
-      dlYKakhCcU5ELysvKzdXbGFDazQ3QnpsbE1Jb3M2T3o2cHl2RlY0MHo5emswdUlNdUZhRzl5VnAyR21j
-      TjFkSHdTVApuUmJ4MWhlcDJwdGI4WWpNekJ5OVl1WnRzUGxtbEpoUUlVeC92bG5uZXB6WVh4TktaN0xt
-      eG8yeVhZZDluK09YCmprYzVMTGpqd3ZKTjYzZUpjdWhjbXVRTENjL3p5dTB5azRiUlRwd01vZkwvYkpl
-      a3FRSURBUUFCbzFNd1VUQWQKQmdOVkhRNEVGZ1FVRExXVXhoWEZtUjVGZmM4LzQvSmhobjNOZjhzd0h3
-      WURWUjBqQkJnd0ZvQVVETFdVeGhYRgptUjVGZmM4LzQvSmhobjNOZjhzd0R3WURWUjBUQVFIL0JBVXdB
-      d0VCL3pBTkJna3Foa2lHOXcwQkFRc0ZBQU9DCkFRRUFRQ2xBcnZtNG5lUDhaNjMxSDlyRjUxbDdXdkR5
-      NjY4NXphcTR6Z0RjeWgxT3AwTHBBMEVNSG9MU2ZhVFgKTHZVZFlIem1ETktSaDRsYlZGYzNuQ3NRQkwx
-      TDMvT1ovUWk1QlFpWmZabmpwSWludHlUT1p2YTgvQlI5WHptYwprdlBCWnRFTjhxZUZOUktNclNnYlFK
-      Z3M3dWliak1taDN4dTlPQW1NY2tmYTBQUXJvNlJUbFRLaDlqRnZ0MTlJCjhSRE43Q2J3L1l3TWJvVDI3
-      S2FzRjBMdzNhMVk1emRqQkhpajRzWHdiZ1pEeEpxTmJRV2N2VXVOWmhDdGNJZnkKdnNrVnUzb0lRK0tz
-      Ums5bWFIT1RMQmZ2RjJUdTVFc0lCQzhjOFhhZ3g2R2o1clNJR0hXaFN5eFhGRUswbmcyUwpRUDVuQktR
-      WHhCNVVHekNONm0rYzBCVXBqdz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+      LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURQekNDQWllZ0F3SUJBZ0lVWXdIVEpGTlN1
+      UzBkRGZ3V0RQL2xUMVM3VERJd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0x6RUxNQWtHQTFVRUJoTUNS
+      VlV4SURBZUJnTlZCQU1NRjJsdFlXZGxMV0Z1Ym05MFlYUnZjaTEzWldKbwpiMjlyTUI0WERUSXpN
+      VEF4T1RBNU1UVXhObG9YRFRJME1UQXhPREE1TVRVeE5sb3dMekVMTUFrR0ExVUVCaE1DClJWVXhJ
+      REFlQmdOVkJBTU1GMmx0WVdkbExXRnVibTkwWVhSdmNpMTNaV0pvYjI5ck1JSUJJakFOQmdrcWhr
+      aUcKOXcwQkFRRUZBQU9DQVE4QU1JSUJDZ0tDQVFFQXpVeSsxOE9UUE9hWVBtcm92enhFcDZpSTJJ
+      ck9KZjVJMDhEMwpoaitxRHl4QTRTclpwMEJRMy9QdlZOTk1hSU51Qi9Tc3hxdXQxU3pKRFV3ZjhB
+      ZVhwVk1tYWUvQmRoRTJMdFh3CmtHSGlMQW5Cd3ZWRzR3SERoUHJYakNZcFExUjlSc0JJMmV6NEtP
+      ZkRyakl6NGdrenphOXN3NW5hZUpBVTE0a1cKRGpaNDJuL3k1bG85b1hPWEJ0N0QxZzVsK3JKd0J1
+      Mk1NTTdpNVhTcC9yUDd6WVRscFBTMjlmLzZkM2g4ZWlqbwpQZ0ZvOUFIYTdoM3F2cit3Z3FNWG5k
+      V2dJSmxaVHpYb1ZsQTFPNlZqeStKMWJhV2JHRWx2NmpXYnpESk5wWjYrClhydzQ2T1ZLSW5kOGdu
+      WS9INnpIQmVYemRtbE1BM2ViL3BZN2M4aXdBK1BNOVgrOUd3SURBUUFCbzFNd1VUQWQKQmdOVkhR
+      NEVGZ1FVSzA0UUJXNk1TNTBWSkFsbm4vaGlJTHdVQ2RNd0h3WURWUjBqQkJnd0ZvQVVLMDRRQlc2
+      TQpTNTBWSkFsbm4vaGlJTHdVQ2RNd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBTkJna3Foa2lHOXcw
+      QkFRc0ZBQU9DCkFRRUFhamVBQWl5SE9obHVJd0lYdUkwLzRxb1lzNnIxYlQxZ0loU05yRWpiRmt2
+      TXhtZkd0UGtCVGx0eHUyenYKZ0hNcmlHVlZlbGxLQ3J4L3JtZUQ5SGg1U1hKNzdiQ2dnT1BZdk9U
+      TllwUW4xNHYwVmk1QnhKbDNBVHJWN3BVagphS3FZeVk5Uk83UGRjMFdUWXRic0VBMzBlZnBsemx2
+      MDlSbGQwcjk2ZkpYMzM4SFYwdjNzdXVuRDJSSGVSRmZIClp4d1BNVlRwdW9CcUNvZnRlS2dsbFFm
+      QWh2emxDMXlkNTVnWHpWZFUxckJpdit0QmFieDlNdU5JdG9EZUR2bk8KZUJldVhGVW5zTDQ5dHcy
+      Tm02TWZ0TWRhQ3YxdmhmWXRFdUdWR1MzdmdOTE5aWG9NWjh2bWM5NDkwdkhsTEFCbApvendNZnpD
+      WjZhOHdRVGhCZWdWUCtVQzZOdz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
     service:
-      name: image-annotator
+      name: image-annotator-webhook
       namespace: image-annotator
       path: /mutate
       port: 8443
-  failurePolicy: Ignore
+  # failurePolicy: Ignore
+  failurePolicy: Fail
   matchPolicy: Equivalent
-  name: image-annotator
   namespaceSelector:
     matchExpressions:
     - key: webhooks.knative.dev/exclude
       operator: DoesNotExist
-    - key: image-annotator/exclude
+    - key: image-annotator-webhook/exclude
       operator: DoesNotExist
   objectSelector:
+    matchExpressions:
+    - key: webhooks.knative.dev/exclude
+      operator: DoesNotExist
+    - key: image-annotator-webhook/exclude
+      operator: DoesNotExist
   reinvocationPolicy: IfNeeded
   rules:
   - apiGroups:

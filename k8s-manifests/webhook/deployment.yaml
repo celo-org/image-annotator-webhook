@@ -4,22 +4,25 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: image-annotator-webhook
+    image-annotator-webhook/exclude: "true"
   name: image-annotator-webhook
   namespace: image-annotator
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: image-annotator-webhook
+      app.kubernetes.io/name: image-annotator-webhook
   template:
     metadata:
       labels:
-        app: image-annotator-webhook
+        app.kubernetes.io/name: image-annotator-webhook
+        image-annotator-webhook/exclude: "true"
     spec:
       containers:
         - image: image-annotator-webhook:latest
           imagePullPolicy: Never
           name: image-annotator-webhook
+          resources: {}
           volumeMounts:
             - name: tls
               mountPath: "/etc/image-annotator-webhook/tls"

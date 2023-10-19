@@ -3,9 +3,9 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app.kubernetes.io/name: image-annotator
-  name: image-annotator
-  namespace: default
+    app.kubernetes.io/name: image-annotator-webhook
+  name: image-annotator-webhook
+  namespace: image-annotator
 spec:
   type: ClusterIP
   ports:
@@ -13,4 +13,4 @@ spec:
       protocol: TCP
       targetPort: 8443
   selector:
-    app.kubernetes.io/name: image-annotator
+    app.kubernetes.io/name: image-annotator-webhook

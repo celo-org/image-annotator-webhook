@@ -80,7 +80,11 @@ func mutateHandler(w http.ResponseWriter, r *http.Request) {
 
 		// If PodSpec is available, patch it
 		if podSpec != nil {
-			patch, err := patchPodSpec(podSpec)
+			createAnnotationField := false
+			if obj.(metav1.Object).GetAnnotations() == nil {
+				createAnnotationField = true
+			}
+			patch, err := patchPodSpec(podSpec, createAnnotationField)
 			logrus.Debug("patch: ", string(patch))
 			if err != nil {
 				admissionResponse = toAdmissionResponse(err)
@@ -121,9 +125,16 @@ func toAdmissionResponse(err error) *admissionv1.AdmissionResponse {
 	}
 }
 
-func patchPodSpec(podSpec *v1.PodSpec) ([]byte, error) {
+func patchPodSpec(podSpec *v1.PodSpec, createAnnotationField bool) ([]byte, error) {
 	patch := []map[string]interface{}{}
 
+	if createAnnotationField {
+		patch = append(patch, map[string]interface{}{
+			"op":    "add",
+			"path":  "/metadata/annotations",
+			"value": map[string]string{},
+		})
+	}
 	// Extract and append container images
 	containers := append(podSpec.Containers, podSpec.InitContainers...)
 	for _, container := range containers {

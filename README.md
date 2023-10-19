@@ -16,13 +16,13 @@
   make cluster
   ```
 
-1. Deploy the image-annotator-webhook to the cluster
+2. Deploy the image-annotator-webhook to the cluster
 
   ```bash
   make push
   ```
 
-1. Deploy webhook
+3. Deploy webhook
 
   ```bash
   make deploy-webhook
@@ -30,25 +30,25 @@
 
   And wait some seconds for the webhook to be ready.
 
-1. Deploy the manifests for testing (add any other manifests you want to test)
+4. Deploy the manifests for testing (add any other manifests you want to test)
 
   ```bash
   make deploy-testing
   ```
 
-1. Check the logs
+5. Check the logs
 
   ```bash
   make logs-webhok
   ```
 
-1. Confim that the webhook is working
+6. Confim that the webhook is working
 
   ```bash
   kubectl get <pod/deployment/statefulset/job/cronjob> -o yaml ...
   ```
 
-1. Delete the cluster
+7. Delete the cluster
 
   ```bash
   make delete-cluster

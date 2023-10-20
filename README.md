@@ -1,5 +1,9 @@
 # image-annotator-webhook
 
+## Chart
+
+Chart available at [celo-org/charts](https://github.com/celo-org/charts/tree/main/charts)
+
 ## How to test locally
 
 ### Prerequisites

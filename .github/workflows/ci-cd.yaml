@@ -1,0 +1,50 @@
+---
+name: CI/CD for image-annotator-webhook
+
+on:
+  push:
+    branches:
+      - "master"
+  pull_request:
+    branches:
+      - "master"
+  workflow_dispatch:
+
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the project
+        run: |
+          make build
+      - name: Run the test
+        run: |
+          make test
+
+  container-build-and-push-sha:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    permissions:
+      contents: read
+      id-token: write
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login at GCP Artifact Registry
+        uses: celo-org/reusable-workflows/.github/actions/auth-gcp-artifact-registry@main
+        with:
+          workload-id-provider: 'projects/1094498259535/locations/global/workloadIdentityPools/gh-image-annotator-webhook/providers/github-by-repos'
+          service-account: 'image-annotator-webhook@devopsre.iam.gserviceaccount.com'
+          docker-gcp-registries: us-west1-docker.pkg.dev
+      - name: Build and push container
+        uses: celo-org/reusable-workflows/.github/actions/build-container@main
+        with:
+          platforms: linux/amd64,linux/arm64
+          registry: us-west1-docker.pkg.dev/devopsre/image-annotator-webhook/image-annotator-webhook
+          tag: ${{ github.sha }}
+          context: .
+          dockerfile: ./Dockerfile
+          push: ${{ fromJSON(true) }}
+          load: ${{ fromJSON(false) }}

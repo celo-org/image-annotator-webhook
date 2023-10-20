@@ -17,11 +17,6 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/mutate", mutateHandler)
-	cert := "/etc/image-annotator-webhook/tls/tls.crt"
-	key := "/etc/image-annotator-webhook/tls/tls.key"
-	port := 8443
-
 	lvl, ok := os.LookupEnv("LOG_LEVEL")
 	if !ok {
 		lvl = "debug"
@@ -31,6 +26,17 @@ func main() {
 		level = logrus.DebugLevel
 	}
 	logrus.SetLevel(level)
+
+	http.HandleFunc("/mutate", mutateHandler)
+	port := 8443
+	cert := "/etc/image-annotator-webhook/tls/tls.crt"
+	if _, err := os.Stat(cert); os.IsNotExist(err) {
+		logrus.Fatal("TLS certificate not found. Please mount it to /etc/image-annotator-webhook/tls/tls.crt")
+	}
+	key := "/etc/image-annotator-webhook/tls/tls.key"
+	if _, err := os.Stat(key); os.IsNotExist(err) {
+		logrus.Fatal("TLS key not found. Please mount it to /etc/image-annotator-webhook/tls/tls.key")
+	}
 
 	logrus.Print("Listening on port 8443...")
 	http.ListenAndServeTLS(fmt.Sprintf(":%d", port), cert, key, nil)

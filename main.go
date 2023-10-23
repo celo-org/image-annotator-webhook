@@ -147,7 +147,7 @@ func patchPodSpec(podSpec *v1.PodSpec, createAnnotationField bool) ([]byte, erro
 		patch = append(patch, map[string]interface{}{
 			"op":    "add",
 			"path":  "/metadata/annotations/image-" + sanitize(container.Name),
-			"value": renameImage(container.Image),
+			"value": container.Image,
 		})
 	}
 
@@ -156,10 +156,4 @@ func patchPodSpec(podSpec *v1.PodSpec, createAnnotationField bool) ([]byte, erro
 
 func sanitize(name string) string {
 	return strings.Replace(name, "-", "_", -1)
-}
-
-// Rename image name to be used as annotation key
-// The reason is that PolicyController also replaces image refereces in annotations :(
-func renameImage(name string) string {
-	return strings.Replace(name, ":", ";", -1)
 }

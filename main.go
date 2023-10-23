@@ -88,7 +88,7 @@ func mutateHandler(w http.ResponseWriter, r *http.Request) {
 		if podSpec != nil {
 			currentAnnotations := obj.(metav1.Object).GetAnnotations()
 			patch, err := patchPodSpec(podSpec, currentAnnotations)
-			logrus.Debug("patch: ", string(patch))
+			// logrus.Debug("patch: ", string(patch))
 			if err != nil {
 				admissionResponse = toAdmissionResponse(err)
 			} else {
@@ -112,7 +112,7 @@ func mutateHandler(w http.ResponseWriter, r *http.Request) {
 	// Return the AdmissionReview to the API server
 	// Log the object admissionResponse as JSON
 	jsonString, _ := json.Marshal(&admissionResponse)
-	logrus.Debug("admissionResponse: ", string(jsonString))
+	logrus.Trace("admissionResponse: ", string(jsonString))
 	admissionReview.Response = admissionResponse
 	admissionReview.Response.UID = admissionReview.Request.UID
 	if err := json.NewEncoder(w).Encode(admissionReview); err != nil {
@@ -132,6 +132,7 @@ func patchPodSpec(podSpec *v1.PodSpec, currentAnnotations map[string]string) ([]
 	patch := []map[string]interface{}{}
 
 	if currentAnnotations == nil {
+		logrus.Debug("currentAnnotations is nil. Initializing it to an empty map")
 		patch = append(patch, map[string]interface{}{
 			"op":    "add",
 			"path":  "/metadata/annotations",
@@ -144,8 +145,10 @@ func patchPodSpec(podSpec *v1.PodSpec, currentAnnotations map[string]string) ([]
 		// Skip if the annotation already exists and image has a '@' in it
 		// Reason is this is probably a digest from policyController and we don't want to overwrite the annotation
 		if _, ok := currentAnnotations["image-"+sanitize(container.Name)]; ok && strings.Contains(container.Image, "@") {
+			logrus.Debug("Skipping container ", container.Name, " because it already has an annotation and image has a digest")
 			continue
 		}
+		logrus.Debug("Adding annotation for container ", container.Name, " with image ", container.Image)
 		patch = append(patch, map[string]interface{}{
 			"op":    "add",
 			"path":  "/metadata/annotations/image-" + sanitize(container.Name),

@@ -23,9 +23,9 @@ func TestPatchPodSpec(t *testing.T) {
 		},
 	}
 
-	expectedPatch := `[{"op":"add","path":"/metadata/annotations/image-container_1","value":"nginx;1.14"},{"op":"add","path":"/metadata/annotations/image-init_container_1","value":"busybox;1.28"}]`
+	expectedPatch := `[{"op":"add","path":"/metadata/annotations","value":{}},{"op":"add","path":"/metadata/annotations/image-container_1","value":"nginx:1.14"},{"op":"add","path":"/metadata/annotations/image-init_container_1","value":"busybox:1.28"}]`
 
-	patch, err := patchPodSpec(podSpec, false)
+	patch, err := patchPodSpec(podSpec, nil)
 	if err != nil {
 		t.Errorf("patchPodSpec returned an error: %v", err)
 	}

@@ -86,11 +86,8 @@ func mutateHandler(w http.ResponseWriter, r *http.Request) {
 
 		// If PodSpec is available, patch it
 		if podSpec != nil {
-			createAnnotationField := false
-			if obj.(metav1.Object).GetAnnotations() == nil {
-				createAnnotationField = true
-			}
-			patch, err := patchPodSpec(podSpec, createAnnotationField)
+			currentAnnotations := obj.(metav1.Object).GetAnnotations()
+			patch, err := patchPodSpec(podSpec, currentAnnotations)
 			logrus.Debug("patch: ", string(patch))
 			if err != nil {
 				admissionResponse = toAdmissionResponse(err)
@@ -131,10 +128,10 @@ func toAdmissionResponse(err error) *admissionv1.AdmissionResponse {
 	}
 }
 
-func patchPodSpec(podSpec *v1.PodSpec, createAnnotationField bool) ([]byte, error) {
+func patchPodSpec(podSpec *v1.PodSpec, currentAnnotations map[string]string) ([]byte, error) {
 	patch := []map[string]interface{}{}
 
-	if createAnnotationField {
+	if currentAnnotations == nil {
 		patch = append(patch, map[string]interface{}{
 			"op":    "add",
 			"path":  "/metadata/annotations",
@@ -144,6 +141,11 @@ func patchPodSpec(podSpec *v1.PodSpec, createAnnotationField bool) ([]byte, erro
 	// Extract and append container images
 	containers := append(podSpec.Containers, podSpec.InitContainers...)
 	for _, container := range containers {
+		// Skip if the annotation already exists and image has a '@' in it
+		// Reason is this is probably a digest from policyController and we don't want to overwrite the annotation
+		if _, ok := currentAnnotations["image-"+sanitize(container.Name)]; ok && strings.Contains(container.Image, "@") {
+			continue
+		}
 		patch = append(patch, map[string]interface{}{
 			"op":    "add",
 			"path":  "/metadata/annotations/image-" + sanitize(container.Name),

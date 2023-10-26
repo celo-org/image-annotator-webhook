@@ -44,7 +44,7 @@ push-deploy: push
 .PHONY: deploy-testing
 deploy-testing: push-deploy
 	@echo "\n📦 Deploying webhook manifests to Kind cluster..."
-	kubectl delete ns testing || true
+	kubectl delete ns testing --force --grace-period=0 || true
 	kubectl apply -f k8s-manifests/testing/
 
 .PHONY: logs-webhook

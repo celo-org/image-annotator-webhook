@@ -32,7 +32,7 @@ Chart available at [celo-org/charts](https://github.com/celo-org/charts/tree/mai
   make deploy-webhook
   ```
 
-  And wait some seconds for the webhook to be ready.
+  And wait some seconds for the webhook to be ready (also you can run `make push-deploy` to do both steps at once)
 
 4. Deploy the manifests for testing (add any other manifests you want to test)
 

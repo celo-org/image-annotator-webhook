@@ -151,14 +151,15 @@ func patchPodSpec(podSpec *v1.PodSpec, currentAnnotations map[string]string) ([]
 	for _, container := range containers {
 		// Skip if the annotation already exists and image has a '@' in it
 		// Reason is this is probably a digest from policyController and we don't want to overwrite the annotation
-		if _, ok := currentAnnotations["image-"+sanitize(container.Name)]; ok && strings.Contains(container.Image, "@") {
+		if _, ok := currentAnnotations["image.clabs.co~1"+sanitize(container.Name)]; ok && strings.Contains(container.Image, "@") {
 			logrus.Debug("Skipping container ", container.Name, " because it already has an annotation and image has a digest")
 			continue
 		}
 		logrus.Debug("Adding annotation for container ", container.Name, " with image ", container.Image)
 		patch = append(patch, map[string]interface{}{
-			"op":    "add",
-			"path":  "/metadata/annotations/image-" + sanitize(container.Name),
+			"op": "add",
+			// ~1 is a JSON pointer escape for /
+			"path":  "/metadata/annotations/image.clabs.co~1" + sanitize(container.Name),
 			"value": container.Image,
 		})
 	}

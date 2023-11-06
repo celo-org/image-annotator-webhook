@@ -12,8 +12,8 @@ var deploymentTemplate = &appsv1.Deployment{
 	ObjectMeta: metav1.ObjectMeta{
 		Name: "test-deployment",
 		Annotations: map[string]string{
-			"image-container_1":      "nginx:1.14",
-			"image-init_container_1": "busybox:1.28",
+			"image.clabs.co~1container_1":      "nginx:1.14",
+			"image.clabs.co~1init_container_1": "busybox:1.28",
 		},
 	},
 	Spec: appsv1.DeploymentSpec{
@@ -41,7 +41,7 @@ func TestPatchPodSpec(t *testing.T) {
 	podSpec := deploymentTemplate.DeepCopy().Spec.Template.Spec
 	podSpec.Containers[0].Image = "nginx:1.14"
 
-	expectedPatch := `[{"op":"add","path":"/metadata/annotations","value":{}},{"op":"add","path":"/metadata/annotations/image-container_1","value":"nginx:1.14"},{"op":"add","path":"/metadata/annotations/image-init_container_1","value":"busybox:1.28"}]`
+	expectedPatch := `[{"op":"add","path":"/metadata/annotations","value":{}},{"op":"add","path":"/metadata/annotations/image.clabs.co~1container_1","value":"nginx:1.14"},{"op":"add","path":"/metadata/annotations/image.clabs.co~1init_container_1","value":"busybox:1.28"}]`
 
 	patch, err := patchPodSpec(&podSpec, nil)
 	if err != nil {
@@ -60,7 +60,7 @@ func TestPatchPodSpec(t *testing.T) {
 func TestPatchPodSpecAlreadyPatched(t *testing.T) {
 	deployment := deploymentTemplate.DeepCopy()
 
-	expectedPatch := `[{"op":"add","path":"/metadata/annotations/image-init_container_1","value":"busybox:1.28"}]`
+	expectedPatch := `[{"op":"add","path":"/metadata/annotations/image.clabs.co~1init_container_1","value":"busybox:1.28"}]`
 
 	patch, err := patchPodSpec(&deployment.Spec.Template.Spec, deployment.Annotations)
 	if err != nil {
@@ -79,9 +79,9 @@ func TestPatchPodSpecAlreadyPatched(t *testing.T) {
 func TestPatchPodSpecPartiallyPatched(t *testing.T) {
 	deployment := deploymentTemplate.DeepCopy()
 	deployment.ObjectMeta.Annotations = map[string]string{
-		"image-container_1": "nginx:1.14",
+		"image.clabs.co~1container_1": "nginx:1.14",
 	}
-	expectedPatch := `[{"op":"add","path":"/metadata/annotations/image-init_container_1","value":"busybox:1.28"}]`
+	expectedPatch := `[{"op":"add","path":"/metadata/annotations/image.clabs.co~1init_container_1","value":"busybox:1.28"}]`
 
 	patch, err := patchPodSpec(&deployment.Spec.Template.Spec, deployment.Annotations)
 	if err != nil {

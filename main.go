@@ -45,9 +45,6 @@ func main() {
 func mutateHandler(w http.ResponseWriter, r *http.Request) {
 	// Resources with podSpec: replicasets, deployments,
 	// pods, cronjobs, jobs, statefulsets, daemonsets
-	logger := logrus.WithField("uri", r.RequestURI)
-	logger.Debug("received mutating request")
-
 	var admissionResponse *admissionv1.AdmissionResponse
 
 	admissionReview := admissionv1.AdmissionReview{}
@@ -65,6 +62,16 @@ func mutateHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		admissionResponse = toAdmissionResponse(err)
 	} else {
+		logger := logrus.WithField("uri", r.RequestURI)
+		// Assert the object to metav1.Object to access its metadata
+		metaObj, ok := obj.(metav1.Object)
+		if !ok {
+			// Handle the error
+			logger.Error("Object is not a metav1.Object")
+			return
+		}
+		logger.Debug("received mutating request for ", obj.GetObjectKind().GroupVersionKind().Kind, " ", metaObj.GetName(), " in namespace ", metaObj.GetNamespace())
+
 		// Extract the PodSpec if available
 		var podSpec *v1.PodSpec
 		switch o := obj.(type) {

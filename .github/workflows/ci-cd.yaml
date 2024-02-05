@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Login at GCP Artifact Registry
-        uses: celo-org/reusable-workflows/.github/actions/auth-gcp-artifact-registry@v2.1
+        uses: celo-org/reusable-workflows/.github/actions/auth-gcp-artifact-registry@v2.0.1
         with:
           workload-id-provider: 'projects/1094498259535/locations/global/workloadIdentityPools/gh-image-annotator-webhook/providers/github-by-repos'
           service-account: 'image-annotator-webhook@devopsre.iam.gserviceaccount.com'

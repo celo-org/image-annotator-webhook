@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Login at GCP Artifact Registry
-        uses: celo-org/reusable-workflows/.github/actions/auth-gcp-artifact-registry@main
+        uses: celo-org/reusable-workflows/.github/actions/auth-gcp-artifact-registry@v2.0.1
         with:
           workload-id-provider: 'projects/1094498259535/locations/global/workloadIdentityPools/gh-image-annotator-webhook/providers/github-by-repos'
           service-account: 'image-annotator-webhook@devopsre.iam.gserviceaccount.com'
@@ -43,7 +43,7 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           registry: us-west1-docker.pkg.dev/devopsre/image-annotator-webhook/image-annotator-webhook
-          tag: ${{ github.sha }}
+          tags: ${{ github.sha }}
           context: .
           dockerfile: ./Dockerfile
           push: ${{ fromJSON(true) }}

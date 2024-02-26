@@ -3,8 +3,8 @@ module github.com/celo-org/image-annotator-webhook
 go 1.21
 
 require (
-	k8s.io/api v0.29.1
-	k8s.io/client-go v0.29.1
+	k8s.io/api v0.29.2
+	k8s.io/client-go v0.29.2
 )
 
 require golang.org/x/sys v0.15.0 // indirect

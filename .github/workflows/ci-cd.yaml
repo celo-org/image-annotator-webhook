@@ -15,7 +15,7 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build the project
         run: |
           make build
@@ -31,7 +31,7 @@ jobs:
       id-token: write
       security-events: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Login at GCP Artifact Registry
         uses: celo-org/reusable-workflows/.github/actions/auth-gcp-artifact-registry@v2.0.5
         with:

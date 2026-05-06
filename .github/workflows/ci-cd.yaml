@@ -24,27 +24,22 @@ jobs:
           make test
 
   container-build-and-push-sha:
-    runs-on: ubuntu-latest
+    uses: celo-org/reusable-workflows/.github/workflows/docker-build.yaml@v3.1.0-rc.4
+    name: Build image-annotator-webhook image container
     needs: build-and-test
     permissions:
-      contents: read
-      id-token: write
+      actions: read
+      contents: write
+      pull-requests: write
       security-events: write
-    steps:
-      - uses: actions/checkout@v4
-      - name: Login at GCP Artifact Registry
-        uses: celo-org/reusable-workflows/.github/actions/auth-gcp-artifact-registry@v2.0.5
-        with:
-          workload-id-provider: 'projects/1094498259535/locations/global/workloadIdentityPools/gh-image-annotator-webhook/providers/github-by-repos'
-          service-account: 'image-annotator-webhook@devopsre.iam.gserviceaccount.com'
-          docker-gcp-registries: us-west1-docker.pkg.dev
-      - name: Build and push container
-        uses: celo-org/reusable-workflows/.github/actions/build-container@main
-        with:
-          platforms: linux/amd64,linux/arm64
-          registry: us-west1-docker.pkg.dev/devopsre/image-annotator-webhook/image-annotator-webhook
-          tags: ${{ github.sha }}
-          context: .
-          dockerfile: ./Dockerfile
-          push: ${{ fromJSON(true) }}
-          load: ${{ fromJSON(false) }}
+      attestations: write
+      id-token: write
+    with:
+      artifact-registry: us-west1-docker.pkg.dev/devopsre/image-annotator-webhook/image-annotator-webhook
+      tags: ${{ github.sha }}
+      platforms: linux/amd64,linux/arm64
+      workload-id-provider: projects/1094498259535/locations/global/workloadIdentityPools/gh-image-annotator-webhook/providers/github-by-repos
+      service-account: image-annotator-webhook@devopsre.iam.gserviceaccount.com
+      context: .
+      file: ./Dockerfile
+      trivy-enabled: false

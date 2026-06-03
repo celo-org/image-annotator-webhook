@@ -24,7 +24,7 @@ jobs:
           make test
 
   container-build-and-push-sha:
-    uses: celo-org/reusable-workflows/.github/workflows/docker-build.yaml@v3.1.0-rc.4
+    uses: celo-org/reusable-workflows/.github/workflows/docker-build.yaml@v3.1.1
     name: Build image-annotator-webhook image container
     needs: build-and-test
     permissions:
